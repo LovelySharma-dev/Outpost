@@ -5,10 +5,10 @@ export default function NotFound() {
     <main id="content" className="lost">
       <div className="sheet">
         <p className="eyebrow">Off the route</p>
-        <h1>This sheet was never on the press.</h1>
-        <p>Sable checked the rack. That address is not an edition.</p>
+        <h1>That stop is not on the timetable.</h1>
+        <p>Grantly does not have a pass at this address.</p>
         <Link className="button" href="/">
-          Back to the proofing table
+          Back to the route
         </Link>
       </div>
     </main>

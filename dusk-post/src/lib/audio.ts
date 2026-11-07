@@ -3,7 +3,7 @@ export type SoundName = "clack" | "press" | "bell" | "lock" | "rustle";
 export type PressAudio = {
   unlock: () => void;
   setMuted: (muted: boolean) => void;
-  play: (name: SoundName) => void;
+  play: (name: SoundName, force?: number) => void;
   dispose: () => void;
 };
 
@@ -72,11 +72,15 @@ export function createPressAudio(): PressAudio {
     setMuted(next) {
       muted = next;
     },
-    play(name) {
+    play(name, force = 0.65) {
+      const amount = Math.max(0.15, Math.min(1, force));
       try {
         if (name === "clack") {
-          noise(0.04, 0.04, 1200);
-          tone(180, 0.05, "square", 0.02);
+          const pitch = 110 + amount * 280;
+          const body = 0.006 + amount * 0.03;
+          noise(0.025 + amount * 0.02, 0.012 + amount * 0.04, 640 + amount * 1700);
+          tone(pitch, 0.03 + amount * 0.035, "square", body);
+          if (amount > 0.82) tone(pitch * 2.05, 0.02, "triangle", body * 0.7);
         } else if (name === "press") {
           tone(90, 0.16, "sine", 0.06);
           noise(0.08, 0.03, 400);

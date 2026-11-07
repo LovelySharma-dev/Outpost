@@ -2,16 +2,13 @@
 
 import { useId } from "react";
 
-type Look = { x: number; y: number };
-
 type SableProps = {
-  look: Look;
   roll?: number;
   ink?: string;
   platesOnly?: boolean;
 };
 
-export function Sable({ look, roll = 0, ink = "#1c1916", platesOnly = false }: SableProps) {
+export function Sable({ roll = 0, ink = "#1c1916", platesOnly = false }: SableProps) {
   const clipId = useId();
   const stripe = ((roll % 36) + 36) % 36;
 
@@ -24,8 +21,10 @@ export function Sable({ look, roll = 0, ink = "#1c1916", platesOnly = false }: S
       </defs>
       {platesOnly ? null : (
         <>
-          <rect x="99" y="6" width="22" height="78" rx="11" fill="#c4893a" />
-          <rect x="104" y="12" width="6" height="64" rx="3" fill="#e7c27a" />
+          <g className="sable-handle">
+            <rect x="99" y="6" width="22" height="78" rx="11" fill="#c4893a" />
+            <rect x="104" y="12" width="6" height="64" rx="3" fill="#e7c27a" />
+          </g>
           <path d="M36 86h148v16H36z" fill="#8a8378" />
           <path d="M36 86h16v28H36z" fill="#6f6a62" />
           <path d="M168 86h16v28h-16z" fill="#6f6a62" />
@@ -41,13 +40,17 @@ export function Sable({ look, roll = 0, ink = "#1c1916", platesOnly = false }: S
       </g>
       <rect x="24" y="108" width="172" height="96" rx="48" fill="none" stroke="#1c1916" strokeWidth="3" />
       {platesOnly ? null : (
-        <g transform={`translate(${look.x * 5} ${look.y * 3})`}>
-          <ellipse cx="86" cy="156" rx="11" ry="13" fill="#f7f1e6" />
-          <ellipse cx="134" cy="156" rx="11" ry="13" fill="#f7f1e6" />
-          <circle cx={88 + look.x * 1.4} cy={158 + look.y} r="4" fill="#1c1916" />
-          <circle cx={136 + look.x * 1.4} cy={158 + look.y} r="4" fill="#1c1916" />
+        <>
+          <g className="sable-eyes">
+            <ellipse className="sable-lid" cx="86" cy="156" rx="11" ry="13" fill="#f7f1e6" />
+            <ellipse className="sable-lid" cx="134" cy="156" rx="11" ry="13" fill="#f7f1e6" />
+            <g className="sable-pupils">
+              <circle cx="88" cy="158" r="4" fill="#1c1916" />
+              <circle cx="136" cy="158" r="4" fill="#1c1916" />
+            </g>
+          </g>
           <path d="M102 176c6 6 14 6 20 0" fill="none" stroke="#f7f1e6" strokeWidth="2.4" strokeLinecap="round" />
-        </g>
+        </>
       )}
     </svg>
   );

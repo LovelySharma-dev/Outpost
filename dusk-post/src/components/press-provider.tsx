@@ -92,7 +92,7 @@ type PressContextValue = {
   toggleMuted: () => void;
   edition: number;
   returning: boolean;
-  play: (name: SoundName) => void;
+  play: (name: SoundName, force?: number) => void;
   sheets: Sheet[];
   addSheet: (to: string, line: string) => void;
   removeSheet: (id: string) => StoredSheet | null;
@@ -133,8 +133,8 @@ export function PressProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const play = useCallback((name: SoundName) => {
-    audioRef.current?.play(name);
+  const play = useCallback((name: SoundName, force?: number) => {
+    audioRef.current?.play(name, force);
   }, []);
 
   const toggleTheme = useCallback(() => {

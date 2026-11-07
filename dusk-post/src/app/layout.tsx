@@ -20,31 +20,27 @@ const plex = IBM_Plex_Mono({
 
 const themeScript = `
 try {
-  var stored = localStorage.getItem("night-press-theme");
-  var night = stored === "night" || (!stored && matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.dataset.theme = night ? "night" : "day";
-  document.documentElement.dataset.muted = localStorage.getItem("night-press-muted") === "1" ? "muted" : "on";
+  document.documentElement.dataset.theme = "day";
+  document.documentElement.dataset.muted = localStorage.getItem("grantly-muted") === "1" ? "muted" : "on";
 } catch (e) {}
 `;
 
 export const metadata: Metadata = {
-  title: "Night Press — Sable",
+  title: "Grantly — Find the award. Keep the deadline.",
   description:
-    "Sable, a baby ink roller, keeps the Night Press in register. Align four color plates, pull a pocket edition, and hang one true line on the drying rack.",
-  keywords: ["Night Press", "Sable", "letterpress", "printing", "portfolio", "creative coding", "interactive"],
-  authors: [{ name: "Sable" }],
+    "Grantly is a timetable for scholarships. Search by level, field, need, deadline, and award size, then keep applications in a wallet on this browser.",
+  keywords: ["Grantly", "scholarships", "financial aid", "students", "deadlines"],
   openGraph: {
-    title: "Night Press — Sable",
-    description:
-      "Sable, a baby ink roller, keeps the Night Press in register. Align the plates, pull a proof, and hang one true line.",
-    siteName: "Night Press",
+    title: "Grantly",
+    description: "A route book for finding and tracking educational funding.",
+    siteName: "Grantly",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary",
-    title: "Night Press — Sable",
-    description: "Sable, a baby ink roller, keeps the Night Press in register.",
+    title: "Grantly",
+    description: "A route book for finding and tracking educational funding.",
   },
   icons: {
     icon: "/icon.svg",
@@ -57,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <a className="skip" href="#content">
-          Skip to the press
+          Skip to the timetable
         </a>
         {children}
       </body>
