@@ -1,10 +1,8 @@
 # Grantly
 
-Grantly is a timetable for scholarships. A student can search the route, open a pass, and keep application status in a wallet stored in this browser.
+Grantly is a scholarship discovery and tracking desk. Search and filters re-rank a local catalog. Saved applications, notes, and the atmosphere stay in this browser.
 
-## Problem
-
-The official brief is GRANTLY: make discovering and managing educational funding simpler. There is no server. Saved passes and notes stay in `localStorage` and the interface says so.
+The header atmosphere control sets Morning, Afternoon, or Night. The N key cycles those modes and is ignored while typing. The choice is stored under `grantly-mode`.
 
 ## Run
 

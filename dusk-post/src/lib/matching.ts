@@ -8,76 +8,84 @@ export interface MatchResult {
   blockers: string[];
 }
 
+function isDomestic(country: string) {
+  return /united states|\busa\b|u\.s\./i.test(country);
+}
+
 export function evaluateScholarshipMatch(
   scholarship: Scholarship,
   profile: StudentProfile
 ): MatchResult {
   const reasons: string[] = [];
   const blockers: string[] = [];
-  let score = 50; // base score for discovery
+  let score = 8;
 
-  // 1. GPA Evaluation (Weight: 25)
   if (profile.gpa >= scholarship.minGpa) {
     const diff = profile.gpa - scholarship.minGpa;
-    if (diff >= 0.3) {
-      score += 25;
-      reasons.push(`GPA exceeds cutoff (${profile.gpa} vs ${scholarship.minGpa} req)`);
-    } else {
-      score += 18;
-      reasons.push(`Meets GPA requirement (${scholarship.minGpa})`);
-    }
+    score += diff >= 0.4 ? 28 : diff >= 0.15 ? 22 : 16;
+    reasons.push(`GPA ${profile.gpa} clears the ${scholarship.minGpa} cutoff`);
   } else {
-    blockers.push(`Requires minimum GPA of ${scholarship.minGpa} (yours is ${profile.gpa})`);
-    score -= 20;
+    blockers.push(`Requires GPA ${scholarship.minGpa} (profile is ${profile.gpa})`);
+    score -= 18;
   }
 
-  // 2. Education Level Evaluation (Weight: 20)
   if (scholarship.educationLevels.includes(profile.educationLevel)) {
-    score += 20;
+    score += 22;
     reasons.push(`Open to ${profile.educationLevel.replace("-", " ")} students`);
   } else {
     blockers.push(`Restricted to ${scholarship.educationLevels.join(", ")}`);
-    score -= 25;
+    score -= 22;
   }
 
-  // 3. Major / Field of Study (Weight: 20)
-  if (
+  const major = profile.major.toLowerCase();
+  const majorFit =
     scholarship.majors.includes("Any Major") ||
-    scholarship.majors.some(
-      (m) =>
-        m.toLowerCase().includes(profile.major.toLowerCase()) ||
-        profile.major.toLowerCase().includes(m.toLowerCase())
-    )
-  ) {
-    score += 20;
-    reasons.push(`Direct alignment with your major in ${profile.major}`);
+    scholarship.majors.some((item) => item.toLowerCase().includes(major) || major.includes(item.toLowerCase()));
+  if (majorFit) {
+    score += 24;
+    reasons.push(`Major lines up with ${profile.major}`);
   } else {
-    score += 5; // not a hard disqualifier unless stated
-    reasons.push(`Related technical fields considered`);
+    score += 8;
+    reasons.push("Major is adjacent, not named on the award");
   }
 
-  // 4. Financial Need Check (Weight: 15)
   if (scholarship.needBased) {
     if (profile.annualFamilyIncome <= 65000) {
-      score += 15;
-      reasons.push("Strong candidate under low-to-middle income guidelines");
+      score += 14;
+      reasons.push("Need is part of the decision, and income is in range");
     } else {
-      score += 5;
-      reasons.push("Income verification required");
+      score += 6;
+      reasons.push("Need-based award asks for income verification");
     }
   } else {
-    score += 10;
-    reasons.push("Pure merit/achievement criteria — no income caps");
+    score += 8;
+    reasons.push("Merit award with no income cap");
   }
 
-  // Bound score between 15% and 99%
-  const finalScore = Math.max(15, Math.min(99, Math.round(score)));
-  const qualified = blockers.length === 0;
+  const labels = scholarship.citizenship.join(" ").toLowerCase();
+  const openAll = labels.includes("all nationalities");
+  const international = labels.includes("international");
+  const domesticOnly = !openAll && !international && (labels.includes("domestic") || labels.includes("permanent"));
+  if (domesticOnly && !isDomestic(profile.country)) {
+    blockers.push("Limited to domestic students and permanent residents");
+    score -= 28;
+  } else if (international && !isDomestic(profile.country)) {
+    score += 14;
+    reasons.push("Written for students studying across a border");
+  } else {
+    score += 6;
+    reasons.push("Citizenship window includes this profile");
+  }
+
+  if (profile.firstGeneration && scholarship.needBased) {
+    score += 10;
+    reasons.push("Need-based award fits a first-generation path");
+  }
 
   return {
     scholarship,
-    score: finalScore,
-    qualified,
+    score: Math.max(12, Math.min(99, Math.round(score))),
+    qualified: blockers.length === 0,
     reasons,
     blockers,
   };
@@ -88,6 +96,6 @@ export function rankScholarshipsForProfile(
   profile: StudentProfile
 ): MatchResult[] {
   return scholarships
-    .map((s) => evaluateScholarshipMatch(s, profile))
-    .sort((a, b) => b.score - a.score);
+    .map((item) => evaluateScholarshipMatch(item, profile))
+    .sort((a, b) => Number(b.qualified) - Number(a.qualified) || b.score - a.score);
 }

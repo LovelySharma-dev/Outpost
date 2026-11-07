@@ -55,18 +55,46 @@ export interface StudentProfile {
   annualFamilyIncome: number;
   targetTuition: number;
   currentSavings: number;
+  firstGeneration?: boolean;
+  personaId?: string;
 }
 
 export const DEFAULT_STUDENT_PROFILE: StudentProfile = {
   name: "Arjun Sharma",
   educationLevel: "undergraduate",
-  gpa: 3.75,
+  gpa: 3.85,
   major: "Computer Science",
   country: "United States",
-  annualFamilyIncome: 48000,
-  targetTuition: 32000,
-  currentSavings: 8000,
+  annualFamilyIncome: 42000,
+  targetTuition: 28000,
+  currentSavings: 4000,
+  firstGeneration: true,
+  personaId: "first-gen-cs",
 };
+
+export const PERSONAS: Array<{ id: string; label: string; profile: StudentProfile }> = [
+  {
+    id: "first-gen-cs",
+    label: "First-Gen CS Undergrad",
+    profile: DEFAULT_STUDENT_PROFILE,
+  },
+  {
+    id: "intl-design",
+    label: "International Design Scholar",
+    profile: {
+      name: "Mina Okonkwo",
+      educationLevel: "undergraduate",
+      gpa: 3.7,
+      major: "UI/UX Design",
+      country: "Nigeria",
+      annualFamilyIncome: 30000,
+      targetTuition: 46000,
+      currentSavings: 2000,
+      firstGeneration: false,
+      personaId: "intl-design",
+    },
+  },
+];
 
 export const SCHOLARSHIPS: Scholarship[] = [
   {

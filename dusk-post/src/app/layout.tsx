@@ -20,19 +20,23 @@ const plex = IBM_Plex_Mono({
 
 const themeScript = `
 try {
-  document.documentElement.dataset.theme = "day";
+  var mode = localStorage.getItem("grantly-mode");
+  if (mode !== "morning" && mode !== "afternoon" && mode !== "night") mode = "night";
+  document.documentElement.dataset.mode = mode;
   document.documentElement.dataset.muted = localStorage.getItem("grantly-muted") === "1" ? "muted" : "on";
-} catch (e) {}
+} catch (e) {
+  document.documentElement.dataset.mode = "night";
+}
 `;
 
 export const metadata: Metadata = {
-  title: "Grantly — Find the award. Keep the deadline.",
+  title: "Grantly",
   description:
-    "Grantly is a timetable for scholarships. Search by level, field, need, deadline, and award size, then keep applications in a wallet on this browser.",
+    "Grantly ranks scholarships, tracks applications, and keeps notes in this browser. Morning, afternoon, and night atmospheres stay on the device.",
   keywords: ["Grantly", "scholarships", "financial aid", "students", "deadlines"],
   openGraph: {
     title: "Grantly",
-    description: "A route book for finding and tracking educational funding.",
+    description: "Rank scholarships and keep the application board in this browser.",
     siteName: "Grantly",
     type: "website",
     locale: "en_US",
@@ -40,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Grantly",
-    description: "A route book for finding and tracking educational funding.",
+    description: "Rank scholarships and keep the application board in this browser.",
   },
   icons: {
     icon: "/icon.svg",
@@ -53,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <a className="skip" href="#content">
-          Skip to the timetable
+          Skip to content
         </a>
         {children}
       </body>
