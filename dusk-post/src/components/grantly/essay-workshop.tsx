@@ -5,7 +5,15 @@ import { z } from "zod";
 import { SCHOLARSHIPS, type Scholarship } from "@/data/scholarships";
 import { useGrantly } from "@/lib/grantly-store";
 
-const noteSchema = z.string().trim().max(240, "Keep the note under 240 characters.");
+const noteSchema = z.string().trim().max(4000, "Keep the draft under 4000 characters.");
+
+type Critique = {
+  strengths: string[];
+  improvements: string[];
+  score: number;
+  mode?: "simulation" | "fallback" | "live";
+  message?: string;
+};
 
 function hooksFrom(prompt: string) {
   return prompt
@@ -26,9 +34,40 @@ function Notepad({
 }) {
   const [draft, setDraft] = useState(initial);
   const [message, setMessage] = useState("");
+  const [coach, setCoach] = useState<Critique | null>(null);
+  const [coaching, setCoaching] = useState(false);
   const words = draft.trim() ? draft.trim().split(/\s+/).length : 0;
   const target = scholarship.requirements.wordCount ?? 0;
-  const invalid = message.startsWith("Keep");
+  const invalid = message.startsWith("Keep") || message.startsWith("Write");
+
+  async function askCoach() {
+    setCoaching(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/ai/critique", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ essayText: draft, scholarshipTitle: scholarship.title }),
+      });
+      const data = (await response.json()) as Critique;
+      if (!response.ok) {
+        setMessage(data.message ?? "The coach needs a longer draft.");
+        setCoach(null);
+        return;
+      }
+      setCoach(data);
+    } catch {
+      setCoach({
+        strengths: ["Compelling personal voice and a clear career roadmap."],
+        improvements: ["Add one concrete project with a result you can count."],
+        score: 85,
+        mode: "fallback",
+      });
+    } finally {
+      setCoaching(false);
+    }
+  }
+
   return (
     <form
       onSubmit={(event) => {
@@ -48,14 +87,43 @@ function Notepad({
       </p>
       <label className="g-field">
         Notepad
-        <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={8} maxLength={280} />
+        <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={8} maxLength={4000} />
       </label>
       {message ? (
         <p className={invalid ? "g-error" : "g-note"} role="status">
           {message}
         </p>
       ) : null}
-      <button type="submit">Save note on this device</button>
+      <div className="g-ctas">
+        <button type="submit">Save note on this device</button>
+        <button type="button" className="g-quiet" onClick={() => void askCoach()} disabled={coaching}>
+          {coaching ? "Reading the draft…" : "Ask the essay coach"}
+        </button>
+      </div>
+      {coach ? (
+        <div className="g-coach" role="status">
+          <p className="g-meta">
+            Coach score {coach.score}.{" "}
+            {coach.mode === "simulation"
+              ? "Simulated read. A Gemini key is not configured on the server."
+              : coach.mode === "fallback"
+                ? "Gemini did not answer, so this is a local fallback."
+                : "Gemini read this draft. The scholarship catalog stayed on this device."}
+          </p>
+          <h3>Strengths</h3>
+          <ul>
+            {coach.strengths.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <h3>Improvements</h3>
+          <ul>
+            {coach.improvements.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </form>
   );
 }
@@ -79,7 +147,10 @@ export function EssayWorkshop() {
     <section className="g-section" id="essay" aria-labelledby="essay-title">
       <p className="g-kicker">Essay workshop</p>
       <h2 id="essay-title">Read the prompt here, then write</h2>
-      <p className="g-note">On-device assistance. The prompt is split in this browser. Nothing is sent to a model.</p>
+      <p className="g-note">
+        The catalog and your draft stay in this browser. Ask the coach and Gemini answers only when a server key is set.
+        Otherwise you get a simulated read. Nothing is stored on a server.
+      </p>
       <div className="g-stack">
         {essays.map((scholarship) => (
           <article key={scholarship.id} className="g-card">

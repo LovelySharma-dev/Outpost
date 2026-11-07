@@ -73,57 +73,128 @@ html[data-mode] body {
   position: sticky;
   top: 0;
   z-index: 30;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem 0.9rem;
-  padding: 0.7rem 1rem;
-  background: color-mix(in srgb, var(--room) 88%, transparent);
+  padding: 0.55rem 0 0;
+  background: color-mix(in srgb, var(--room) 82%, transparent);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.g-topbar {
+  width: min(1120px, calc(100% - 1.5rem));
+  margin: 0 auto 0.55rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "mark tools"
+    "nav nav";
+  align-items: center;
+  gap: 0.45rem 0.7rem;
 }
 
 .g-mark {
+  grid-area: mark;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
   color: var(--ink);
   font-family: var(--font-fraunces), serif;
-  font-size: 1.35rem;
+  font-size: 1.28rem;
+  letter-spacing: -0.03em;
   text-decoration: none;
+}
+
+.g-monogram {
+  width: 1.7rem;
+  height: 1.7rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0;
 }
 
 .g-nav {
+  grid-area: nav;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.7rem;
+  gap: 0.15rem;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass);
+}
+
+.g-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .g-nav a {
-  color: var(--muted);
-  text-decoration: none;
+  flex: 0 0 auto;
   min-height: 44px;
+  padding: 0 0.8rem;
   display: inline-flex;
   align-items: center;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .g-nav a:hover {
   color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.g-nav a[aria-current="location"] {
+  background: var(--ink);
+  color: var(--room);
+}
+
+.g-tools {
+  grid-area: tools;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .g-modes {
   display: inline-flex;
-  border: 1px solid var(--line);
+  padding: 0.18rem;
+  gap: 0.1rem;
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
-  overflow: hidden;
   background: var(--glass);
 }
 
-.g-modes button {
+.g-modes button,
+.g-mute {
+  position: relative;
   min-height: 44px;
   min-width: 44px;
-  padding: 0 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   border: 0;
+  border-radius: 999px;
   background: transparent;
-  color: var(--ink);
+  color: var(--muted);
   font: inherit;
+  font-size: 0.88rem;
+}
+
+.g-modes button {
+  padding: 0 0.55rem;
 }
 
 .g-modes button[aria-checked="true"] {
@@ -132,17 +203,19 @@ html[data-mode] body {
 }
 
 .g-mute {
-  min-height: 44px;
-  min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0 0.8rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
+  padding: 0 0.75rem;
+  border: 1px solid var(--glass-border);
   background: var(--glass);
   color: var(--ink);
-  font: inherit;
+}
+
+.g-modes button:hover,
+.g-mute:hover {
+  color: var(--ink);
+}
+
+.g-modes button[aria-checked="true"]:hover {
+  color: var(--on-accent);
 }
 
 .g-main {
@@ -152,7 +225,7 @@ html[data-mode] body {
 }
 
 .g-section {
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 7.5rem;
   padding: 2.4rem 0;
 }
 
@@ -287,16 +360,25 @@ html[data-mode] body {
 }
 
 .g-holo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  overflow: hidden;
   text-align: left;
   color: var(--ink);
-  background: var(--glass);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 32%),
+    var(--glass);
   border: 1px solid var(--glass-border);
   border-radius: 1.4rem;
-  padding: 1.1rem;
-  min-height: 44px;
+  padding: 1.15rem 1.15rem 1rem;
+  min-height: 16.5rem;
   backdrop-filter: blur(40px);
   box-shadow: 0 20px 50px color-mix(in srgb, var(--ink) 12%, transparent);
   transform-style: preserve-3d;
+  cursor: pointer;
 }
 
 html[data-mode="night"] .g-holo-card {
@@ -323,17 +405,103 @@ html[data-mode="night"] .g-holo-card {
   gap: 0.8rem;
 }
 
-.g-ring {
-  width: 4.2rem;
-  height: 4.2rem;
+.g-holo-kicker {
+  font-family: var(--font-plex), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.g-holo-sub {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.g-holo-factors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.g-holo-factors li {
+  position: relative;
+  padding-left: 0.95rem;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.g-holo-factors li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
+  background: var(--accent);
+}
+
+.g-holo-next {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: auto;
+  padding: 0.7rem 0.75rem;
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--glass-border));
+}
+
+.g-holo-next span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.g-holo-next strong {
+  font-size: 1rem;
+}
+
+.g-ring {
+  position: relative;
+  width: 4.6rem;
+  height: 4.6rem;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   font-weight: 700;
-  background:
-    radial-gradient(circle at center, var(--glass) 58%, transparent 60%),
-    conic-gradient(var(--accent) 0 98%, color-mix(in srgb, var(--line) 80%, transparent) 0);
   animation: g-pulse 2.2s ease-in-out infinite;
+}
+
+.g-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.g-ring-track,
+.g-ring-value {
+  fill: none;
+  stroke-width: 4;
+}
+
+.g-ring-track {
+  stroke: color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+.g-ring-value {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+
+.g-ring strong {
+  position: relative;
+  font-size: 0.95rem;
 }
 
 .g-orbit {
@@ -604,6 +772,19 @@ html[data-mode="night"] .g-error {
   padding-bottom: 2rem;
 }
 
+.g-coach {
+  margin-top: 0.8rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--glass-border);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.g-coach ul {
+  margin: 0.3rem 0 0.7rem;
+  padding-left: 1.1rem;
+}
+
 .g-sr {
   position: absolute;
   width: 1px;
@@ -619,6 +800,42 @@ html[data-mode="night"] .g-error {
 @media (min-width: 760px) {
   .g-feed {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1080px) {
+  .g-topbar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "mark nav tools";
+  }
+
+  .g-nav {
+    justify-self: center;
+  }
+
+  .g-section {
+    scroll-margin-top: 5.75rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .g-modes button span,
+  .g-mute span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .g-modes button,
+  .g-mute {
+    width: 44px;
+    padding: 0;
   }
 }
 
@@ -639,7 +856,7 @@ html[data-mode="night"] .g-error {
 
   .g-holo-stage {
     position: absolute;
-    inset: 3.4rem 0.6rem;
+    inset: 3.2rem 0.4rem 4.4rem;
     z-index: 1;
   }
 
@@ -655,7 +872,7 @@ html[data-mode="night"] .g-error {
 
   .g-orbit-a { top: 0; left: 0; }
   .g-orbit-b { top: 0.35rem; right: 0; }
-  .g-orbit-c { bottom: 0; left: 0.2rem; }
+  .g-orbit-c { right: 0; bottom: 0; max-width: 46%; }
 }
 
 @media (min-width: 1100px) {

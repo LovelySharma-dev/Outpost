@@ -128,15 +128,45 @@ export function GrantlyHero() {
               }}
             >
               <span className="g-sheen" aria-hidden="true" />
+              <span className="g-holo-kicker">Live match</span>
               <span className="g-pill">
-                <span className="g-ring">98%</span>
+                <span className="g-ring" aria-hidden="true">
+                  <svg viewBox="0 0 72 72">
+                    <circle className="g-ring-track" cx="36" cy="36" r="30" />
+                    <circle
+                      className="g-ring-value"
+                      cx="36"
+                      cy="36"
+                      r="30"
+                      strokeDasharray={RING}
+                      strokeDashoffset={RING * (1 - score / 100)}
+                    />
+                  </svg>
+                  <strong>{score}%</strong>
+                </span>
                 <span>
-                  <strong>GPA 3.85</strong>
-                  <br />
-                  CS / First-Gen
+                  <strong>{profile.name}</strong>
+                  <span className="g-holo-sub">
+                    GPA {profile.gpa.toFixed(2)} · {profile.major}
+                    {profile.firstGeneration ? " · First-gen" : ""}
+                  </span>
                   <span className="g-sr">Opens the match feed</span>
                 </span>
               </span>
+              <ul className="g-holo-factors">
+                {reasons.map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
+              {best ? (
+                <span className="g-holo-next">
+                  <span>Next pull</span>
+                  <strong>{best.scholarship.title}</strong>
+                  <span>
+                    {best.scholarship.amountFormatted} · {best.scholarship.daysRemaining}d left
+                  </span>
+                </span>
+              ) : null}
             </button>
           </div>
           <p className="g-orbit g-orbit-a">
