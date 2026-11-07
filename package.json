@@ -1,0 +1,11 @@
+{
+  "name": "outpost",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix dusk-post run dev",
+    "build": "npm --prefix dusk-post run build",
+    "start": "npm --prefix dusk-post run start",
+    "lint": "npm --prefix dusk-post run lint"
+  }
+}

@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Night Press
 
-## Getting Started
+Sable is a baby ink roller and the junior printer of the Night Press. The site is a proofing table: align four color plates, pull a pocket edition, set type, and hang one line on a drying rack that stays in this browser.
 
-First, run the development server:
+## Assumption
+
+The Outpost problem statement was not in the workspace or on the public event pages. This build follows the only complete brief attached to the reference site: the haX.baby “Baby’s First Portfolio” guidelines, with [Void](https://baby-hacks.vercel.app/) as a quality bar and [Print Rest](https://www.printrest.xyz/) as material inspiration. Sable, the press, and the posters are original. Void’s kitten and Print Rest’s catalog are not reproduced.
+
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production check: `npm run build`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Keys
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`M` mutes. `N` switches day and night. Neither key fires while typing.
