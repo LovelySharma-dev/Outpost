@@ -7,6 +7,11 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
+/**
+ * Lenis for the press pages. GRANTLY does not mount this: the scholarship
+ * journey is a long form with a sticky bar, hash links, and inputs, and the
+ * current dashboard references keep native scrolling for that reason.
+ */
 export function SmoothScroll() {
   const reduced = useReducedMotion();
 

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { PERSONAS, SCHOLARSHIPS } from "@/data/scholarships";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { pauseTweensWhenHidden } from "@/lib/motion";
 import { useGrantly } from "@/lib/grantly-store";
 import { rankScholarshipsForProfile } from "@/lib/matching";
 
@@ -60,6 +61,7 @@ export function GrantlyHero() {
       const playAll = () => tweens.forEach((tween) => tween.play());
       card.addEventListener("pointerenter", pauseAll);
       card.addEventListener("pointerleave", playAll);
+      cleanups.push(pauseTweensWhenHidden(tweens));
       cleanups.push(() => {
         card.removeEventListener("pointerenter", pauseAll);
         card.removeEventListener("pointerleave", playAll);
@@ -87,6 +89,8 @@ export function GrantlyHero() {
       cleanups.push(() => {
         card.removeEventListener("pointermove", tilt);
         card.removeEventListener("pointerleave", reset);
+        gsap.killTweensOf(card);
+        gsap.set(card, { rotationX: 0, rotationY: 0 });
       });
     }
 

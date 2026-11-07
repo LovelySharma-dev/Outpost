@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { type ApplicationStage } from "@/data/scholarships";
 import { useGrantly, type TrackedApplication } from "@/lib/grantly-store";
+import { useFinePointer } from "@/lib/motion";
 
 const STAGES: Array<{ id: ApplicationStage; label: string }> = [
   { id: "saved", label: "Saved" },
@@ -56,6 +57,7 @@ function CardNotes({
 export function KanbanBoard({ onStageSound }: { onStageSound: (name: "clack" | "bell") => void }) {
   const { applications, getScholarshipById, updateApplicationStage, toggleChecklistItem, updateNotes, removeApplication } =
     useGrantly();
+  const finePointer = useFinePointer();
   const [notice, setNotice] = useState("");
   const entries = Object.values(applications);
 
@@ -110,8 +112,11 @@ export function KanbanBoard({ onStageSound }: { onStageSound: (name: "clack" | "
                     <article
                       key={item.scholarshipId}
                       className="g-card"
-                      draggable
-                      onDragStart={(event) => event.dataTransfer.setData("text/plain", item.scholarshipId)}
+                      draggable={finePointer}
+                      onDragStart={(event) => {
+                        if (!finePointer) return;
+                        event.dataTransfer.setData("text/plain", item.scholarshipId);
+                      }}
                     >
                       <h3>{scholarship.title}</h3>
                       <p className="g-meta">
